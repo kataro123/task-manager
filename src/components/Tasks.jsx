@@ -1,20 +1,20 @@
-import { useState } from "react";
-import Header from "./Header";
-import Input from "./Input";
-import Button from "./Button";
+import { useState } from 'react';
+import Header from './Header';
+import Input from './Input';
+import Button from './Button';
 
 function Tasks() {
   const [inputValue, setInputValue] = useState();
 
   const [messages, setMessages] = useState([
-    "Hello World",
-    "FSC is the best course in the world",
+    'Hello World',
+    'FSC is the best course in the world',
   ]);
 
   function handleButtonClick() {
-    console.log("Button Clicked");
+    console.log('Button Clicked');
     setMessages([...messages, inputValue]);
-    setInputValue("");
+    setInputValue('');
   }
 
   return (
@@ -32,7 +32,7 @@ function Tasks() {
       <div>
         <ul>
           {messages.map((message) => (
-            <li>{message}</li>
+            <li key={message}>{message}</li>
           ))}
         </ul>
       </div>
