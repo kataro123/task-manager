@@ -1,9 +1,9 @@
-import Tasks from './components/Tasks';
-const name = 'teste';
-console.log(name);
-
 const App = () => {
-  return <Tasks />;
+  return (
+    <div>
+      <h1 className="p-6">Task Manager</h1>
+    </div>
+  );
 };
 
 export default App;
