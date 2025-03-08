@@ -4,6 +4,7 @@ import TrashIcon from './../assets/icons/trash.svg?react';
 import SunIcon from './../assets/icons/sun.svg?react';
 import CloudSunIcon from './../assets/icons/cloud-sun.svg?react';
 import MoonIcon from './../assets/icons/moon.svg?react';
+import TasksSeparator from './TasksSeparator';
 
 const Tasks = () => {
   return (
@@ -29,36 +30,17 @@ const Tasks = () => {
       </div>
 
       <div className="rounded-xl bg-white p-6">
-        {/* MANHÃ */}
-
-        {/* SE DER PROBLEMA DE MARGIN OU PADDING- ADICIONAR CLASSE SPACE-Y-3 NAS 3 DIVS */}
-
         <div className="">
-          <div className="flex items-center gap-2 border-b border-solid border-[#f4f4f5] pb-1 text-[#9a9c9f]">
-            <SunIcon />
-            <p className="text-sm">Manhã</p>{' '}
-          </div>
+          <TasksSeparator title="Manhã" icon={<SunIcon />} />
         </div>
 
-        {/* MANHÃ */}
-
-        {/* TARDE */}
         <div className="my-6">
-          <div className="flex items-center gap-2 border-b border-solid border-[#f4f4f5] pb-1 text-[#9a9c9f]">
-            <CloudSunIcon />
-            <p className="text-sm">Tarde</p>{' '}
-          </div>
+          <TasksSeparator title="Tarde" icon={<CloudSunIcon />} />
         </div>
-        {/* TARDE */}
 
-        {/* NOITE */}
         <div className="">
-          <div className="flex items-center gap-2 border-b border-solid border-[#f4f4f5] pb-1 text-[#9a9c9f]">
-            <MoonIcon />
-            <p className="text-sm">Noite</p>{' '}
-          </div>
+          <TasksSeparator title="Noite" icon={<MoonIcon />} />
         </div>
-        {/* NOITE */}
       </div>
     </div>
   );
