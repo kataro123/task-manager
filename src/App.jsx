@@ -1,7 +1,9 @@
+import Sidebar from './components/Sidebar';
+
 const App = () => {
   return (
     <div>
-      <h1 className="p-6">Task Manager</h1>
+      <Sidebar />
     </div>
   );
 };
