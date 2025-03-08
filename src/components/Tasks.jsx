@@ -1,43 +1,31 @@
-import { useState } from 'react';
-import Header from './Header';
-import Input from './Input';
 import Button from './Button';
+import AddIcon from './../assets/icons/Add.svg?react';
+import TrashIcon from './../assets/icons/trash.svg?react';
 
-function Tasks() {
-  const [inputValue, setInputValue] = useState();
-
-  const [messages, setMessages] = useState([
-    'Hello World',
-    'FSC is the best course in the world',
-  ]);
-
-  function handleButtonClick() {
-    console.log('Button Clicked');
-    setMessages([...messages, inputValue]);
-    setInputValue('');
-  }
-
+const Tasks = () => {
   return (
-    <div>
-      <Header>
-        <h1>Add a Task</h1>
-      </Header>
-      <Input inputValue={inputValue} setInputValue={setInputValue} />
-      <Button onClick={handleButtonClick} />
+    <div className="w-full px-8 py-16">
+      <div className="flex w-full justify-between">
+        <div>
+          <span className="text-xs font-semibold text-[#00adb5]">
+            Minhas Tarefas
+          </span>
+          <h2 className="text-xl font-semibold">Minhas Tarefas</h2>
+        </div>
+        <div className="flex items-center gap-3">
+          <Button variant="ghost">
+            Limpar tarefas
+            <TrashIcon />
+          </Button>
 
-      <Header>
-        <h1>My Tasks</h1>
-      </Header>
-
-      <div>
-        <ul>
-          {messages.map((message) => (
-            <li key={message}>{message}</li>
-          ))}
-        </ul>
+          <Button>
+            Nova Tarefa
+            <AddIcon />
+          </Button>
+        </div>
       </div>
     </div>
   );
-}
+};
 
 export default Tasks;
