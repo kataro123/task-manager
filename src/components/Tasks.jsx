@@ -10,11 +10,35 @@ import MoonIcon from './../assets/icons/moon.svg?react';
 import { useState } from 'react';
 
 const Tasks = () => {
-  const [tasks] = useState(TASK);
+  const [tasks, setTasks] = useState(TASK);
 
   const morningTasks = tasks.filter((task) => task.time === 'morning');
   const afternoonTasks = tasks.filter((task) => task.time === 'afternoon');
   const eveningTasks = tasks.filter((task) => task.time === 'evening');
+
+  const handleTaskCheckboxClick = (taskId) => {
+    const newTasks = tasks.map((task) => {
+      if (task.id !== taskId) {
+        return task;
+      }
+
+      if (task.status === 'not_started') {
+        return { ...task, status: 'in_progress' };
+      }
+
+      if (task.status === 'in_progress') {
+        return { ...task, status: 'done' };
+      }
+
+      if (task.status === 'done') {
+        return { ...task, status: 'not_started' };
+      }
+
+      return task;
+    });
+
+    setTasks(newTasks);
+  };
 
   return (
     <div className="w-full px-8 py-16">
@@ -43,7 +67,11 @@ const Tasks = () => {
           <TasksSeparator title="Manhã" icon={<SunIcon />} />
           {/* TAREFA DE MANHA */}
           {morningTasks.map((task) => (
-            <TaskItem key={task.id} task={task} />
+            <TaskItem
+              key={task.id}
+              task={task}
+              handleTaskCheckboxClick={handleTaskCheckboxClick}
+            />
           ))}
         </div>
 
@@ -51,7 +79,11 @@ const Tasks = () => {
           <TasksSeparator title="Tarde" icon={<CloudSunIcon />} />
           {/* TAREFA DE TARDE */}
           {afternoonTasks.map((task) => (
-            <TaskItem key={task.id} task={task} />
+            <TaskItem
+              key={task.id}
+              task={task}
+              handleTaskCheckboxClick={handleTaskCheckboxClick}
+            />
           ))}
         </div>
 
@@ -59,7 +91,11 @@ const Tasks = () => {
           <TasksSeparator title="Noite" icon={<MoonIcon />} />
           {/* TAREFA DE NOITE */}
           {eveningTasks.map((task) => (
-            <TaskItem key={task.id} task={task} />
+            <TaskItem
+              key={task.id}
+              task={task}
+              handleTaskCheckboxClick={handleTaskCheckboxClick}
+            />
           ))}
         </div>
       </div>
