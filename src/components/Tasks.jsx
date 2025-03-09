@@ -1,18 +1,19 @@
-import Button from './Button';
-import TasksSeparator from './TasksSeparator';
-import TASK from './../constants/tasks';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import TaskItem from './TaskItem';
+
 import {
   AddIcon,
-  TrashIcon,
-  SunIcon,
   CloudSunIcon,
   MoonIcon,
+  SunIcon,
+  TrashIcon,
 } from './../assets/icons';
+import TASK from './../constants/tasks';
+import Button from './Button';
+import TaskItem from './TaskItem';
+import TasksSeparator from './TasksSeparator';
 
-const Tasks = () => {
+function Tasks() {
   const [tasks, setTasks] = useState(TASK);
 
   const morningTasks = tasks.filter((task) => task.time === 'morning');
@@ -115,6 +116,6 @@ const Tasks = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Tasks;
