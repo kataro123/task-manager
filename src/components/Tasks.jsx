@@ -8,6 +8,7 @@ import SunIcon from './../assets/icons/sun.svg?react';
 import CloudSunIcon from './../assets/icons/cloud-sun.svg?react';
 import MoonIcon from './../assets/icons/moon.svg?react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 const Tasks = () => {
   const [tasks, setTasks] = useState(TASK);
@@ -17,9 +18,9 @@ const Tasks = () => {
   const eveningTasks = tasks.filter((task) => task.time === 'evening');
 
   const handleTaskDeleteClick = (taskId) => {
-    console.log('teste');
     const newTask = tasks.filter((task) => task.id !== taskId);
     setTasks(newTask);
+    toast.success('Tarefa deletada com sucesso!');
   };
 
   const handleTaskCheckboxClick = (taskId) => {
@@ -33,6 +34,14 @@ const Tasks = () => {
         in_progress: 'done',
         done: 'not_started',
       };
+
+      const statsToast = {
+        not_started: 'Tarefa iniciada com sucesso!',
+        in_progress: 'Tarefa finalizada com sucesso!',
+        done: 'Tarefa resetada com sucesso!',
+      };
+
+      toast.success(statsToast[task.status]);
 
       return { ...task, status: stats[task.status] };
     });
