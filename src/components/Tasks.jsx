@@ -22,19 +22,13 @@ const Tasks = () => {
         return task;
       }
 
-      if (task.status === 'not_started') {
-        return { ...task, status: 'in_progress' };
-      }
+      const stats = {
+        not_started: 'in_progress',
+        in_progress: 'done',
+        done: 'not_started',
+      };
 
-      if (task.status === 'in_progress') {
-        return { ...task, status: 'done' };
-      }
-
-      if (task.status === 'done') {
-        return { ...task, status: 'not_started' };
-      }
-
-      return task;
+      return { ...task, status: stats[task.status] };
     });
 
     setTasks(newTasks);
