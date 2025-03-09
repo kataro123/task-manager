@@ -9,12 +9,14 @@ import {
   TrashIcon,
 } from './../assets/icons';
 import TASK from './../constants/tasks';
+import AddTaskDialog from './AddTaskDialog';
 import Button from './Button';
 import TaskItem from './TaskItem';
 import TasksSeparator from './TasksSeparator';
 
 function Tasks() {
   const [tasks, setTasks] = useState(TASK);
+  const [addTaskDialogIsOpen, setAddTaskDialogIsOpen] = useState(false);
 
   const morningTasks = tasks.filter((task) => task.time === 'morning');
   const afternoonTasks = tasks.filter((task) => task.time === 'afternoon');
@@ -54,6 +56,7 @@ function Tasks() {
 
   return (
     <div className="w-full space-y-16 px-8 py-16">
+      <AddTaskDialog isOpen={addTaskDialogIsOpen} />
       <div className="flex w-full justify-between">
         <div>
           <span className="text-xs font-semibold text-[#00adb5]">
@@ -67,7 +70,7 @@ function Tasks() {
             <TrashIcon />
           </Button>
 
-          <Button>
+          <Button onClick={() => setAddTaskDialogIsOpen(!addTaskDialogIsOpen)}>
             Nova Tarefa
             <AddIcon />
           </Button>
