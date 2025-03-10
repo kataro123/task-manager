@@ -1,13 +1,15 @@
-function Input(props) {
+const Input = ({ label, ...rest }) => {
   return (
-    <input
-      type="text"
-      className="input"
-      value={props.inputValue}
-      placeholder="Create your task"
-      onChange={(e) => props.setInputValue(e.target.value)}
-    />
+    <div className="flex flex-col space-y-1 text-left">
+      <label htmlFor={rest.id} className="text-sm font-semibold text-[#35383e]">
+        {label}
+      </label>
+      <input
+        className="rounded-lg border-2 border-solid border-[#ececec] px-4 py-3 outline-[#00adb5] placeholder:text-sm placeholder:text-[#9a9c9f]"
+        {...rest}
+      />
+    </div>
   );
-}
+};
 
 export default Input;
