@@ -60,10 +60,6 @@ function Tasks() {
 
   return (
     <div className="w-full space-y-16 px-8 py-16">
-      <AddTaskDialog
-        handleDialogClose={handleDialogClose}
-        isOpen={addTaskDialogIsOpen}
-      />
       <div className="flex w-full justify-between">
         <div>
           <span className="text-xs font-semibold text-[#00adb5]">
@@ -124,6 +120,10 @@ function Tasks() {
           ))}
         </div>
       </div>
+      <AddTaskDialog
+        handleDialogClose={handleDialogClose}
+        isOpen={addTaskDialogIsOpen}
+      />
     </div>
   );
 }
