@@ -58,6 +58,12 @@ function Tasks() {
     setAddTaskDialogIsOpen(!addTaskDialogIsOpen);
   };
 
+  const handleAddTask = (task) => {
+    setTasks([...tasks, task]);
+    toast.success('Tarefa adicionada com sucesso!');
+    setAddTaskDialogIsOpen(false);
+  };
+
   return (
     <div className="w-full space-y-16 px-8 py-16">
       <div className="flex w-full justify-between">
@@ -123,6 +129,7 @@ function Tasks() {
       <AddTaskDialog
         handleDialogClose={handleDialogClose}
         isOpen={addTaskDialogIsOpen}
+        handleSubmit={handleAddTask}
       />
     </div>
   );
