@@ -21,6 +21,7 @@ const AddTaskDialog = ({ isOpen, handleDialogClose, handleSubmit }) => {
       setTitle('');
       setTime('morning');
       setDescription('');
+      setErrors([]);
     }
   }, [isOpen]);
 
@@ -47,8 +48,8 @@ const AddTaskDialog = ({ isOpen, handleDialogClose, handleSubmit }) => {
       });
     }
 
+    setErrors(newErrors);
     if (newErrors.length > 0) {
-      setErrors(newErrors);
       return;
     }
 
@@ -124,10 +125,7 @@ const AddTaskDialog = ({ isOpen, handleDialogClose, handleSubmit }) => {
                     variant="secondary"
                     size="large"
                     className="w-full"
-                    onClick={() => {
-                      handleDialogClose();
-                      setErrors([]);
-                    }}
+                    onClick={handleDialogClose}
                   >
                     Cancelar
                   </Button>
