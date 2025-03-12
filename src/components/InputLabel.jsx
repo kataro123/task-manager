@@ -8,7 +8,7 @@ const InputLabel = (props) => {
   );
 };
 
-InputLabel.PropTypes = {
+InputLabel.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
