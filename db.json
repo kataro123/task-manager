@@ -41,13 +41,6 @@
       "description": "Meditar por 10 minutos",
       "time": "evening",
       "status": "not_started"
-    },
-    {
-      "id": "d364c4c5-5404-4ab8-855d-12ea7adb37bd",
-      "title": "teste333",
-      "time": "afternoon",
-      "description": "teste333",
-      "status": "not_started"
     }
   ]
 }
