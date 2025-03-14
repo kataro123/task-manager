@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import {
@@ -81,9 +82,10 @@ const TaskItem = ({ task, handleCheckboxClick, onDeleteSuccess }) => {
             <TrashIcon className="text-brand-text-gray text-opacity-40 transition hover:text-opacity-60" />
           )}
         </Button>
-        <a href="#">
+
+        <Link to={`/task/${task.id}`}>
           <DetailsIcon className="text-black text-opacity-40 transition hover:text-opacity-60" />
-        </a>
+        </Link>
       </div>
     </div>
   );
@@ -98,7 +100,6 @@ TaskItem.propTypes = {
     status: PropTypes.oneOf(['not_started', 'in_progress', 'done']).isRequired,
   }).isRequired,
   handleCheckboxClick: PropTypes.func.isRequired,
-  handleDeleteClick: PropTypes.func.isRequired,
 };
 
 export default TaskItem;
