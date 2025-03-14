@@ -123,14 +123,20 @@ const AddTaskDialog = ({ isOpen, handleDialogClose, onSubmitSuccess }) => {
                   placeholder="Insira o título da tarefa"
                   error={titleError}
                   ref={titleRef}
+                  disabled={submitIsLoading}
                 />
-                <TimeSelect error={timeError} ref={timeRef} />
+                <TimeSelect
+                  error={timeError}
+                  ref={timeRef}
+                  disabled={submitIsLoading}
+                />
                 <Input
                   label="Descrição"
                   id="description"
                   placeholder="Descreva a tarefa"
                   error={descriptionError}
                   ref={descriptionRef}
+                  disabled={submitIsLoading}
                 />
 
                 <div className="flex gap-3">

@@ -90,13 +90,6 @@
       "time": "morning",
       "description": "faefaefaef",
       "status": "not_started"
-    },
-    {
-      "id": "4e83fd87-c2ee-485b-8f38-006f07288bca",
-      "title": "teste",
-      "time": "morning",
-      "description": "teste",
-      "status": "not_started"
     }
   ]
 }
