@@ -44,17 +44,26 @@ function Tasks() {
     toast.success('Tarefa deletada com sucesso!');
   };
 
-  const handleTaskCheckboxClick = (taskId) => {
+  const handleTaskCheckboxClick = async (uTask) => {
+    const stats = {
+      not_started: 'in_progress',
+      in_progress: 'done',
+      done: 'not_started',
+    };
+
+    const response = await fetch(`http://localhost:3000/tasks/${uTask.id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status: stats[uTask.status] }),
+    });
+
+    if (!response.ok) {
+      return;
+    }
+
     const newTasks = tasks.map((task) => {
-      if (task.id !== taskId) {
+      if (task.id !== uTask.id) {
         return task;
       }
-
-      const stats = {
-        not_started: 'in_progress',
-        in_progress: 'done',
-        done: 'not_started',
-      };
 
       const statsToast = {
         not_started: 'Tarefa iniciada com sucesso!',

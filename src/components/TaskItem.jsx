@@ -60,7 +60,7 @@ const TaskItem = ({ task, handleCheckboxClick, onDeleteSuccess }) => {
             type="checkbox"
             checked={task.status === 'done'}
             className="absolute h-full w-full cursor-pointer opacity-0"
-            onChange={() => handleCheckboxClick()}
+            onChange={() => handleCheckboxClick(task)}
           />
           {task.status === 'done' && <CheckIcon className="text-white" />}
           {task.status === 'in_progress' && (
