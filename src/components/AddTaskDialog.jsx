@@ -1,5 +1,6 @@
 import './AddTaskDialog.css';
 
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import PropTypes from 'prop-types';
 import { useRef } from 'react';
 import { createPortal } from 'react-dom';
@@ -13,7 +14,24 @@ import Button from './Button';
 import Input from './Input';
 import TimeSelect from './TimeSelect';
 
-const AddTaskDialog = ({ isOpen, handleDialogClose, onSubmitSuccess }) => {
+const AddTaskDialog = ({ isOpen, handleDialogClose }) => {
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    mutationKey: 'addTask',
+    mutationFn: async (task) => {
+      const response = await fetch('http://localhost:3000/tasks', {
+        method: 'POST',
+        body: JSON.stringify(task),
+      });
+
+      if (!response.ok) {
+        throw new Error();
+      }
+
+      return await response.json();
+    },
+  });
+
   const {
     register,
     handleSubmit,
@@ -47,27 +65,28 @@ const AddTaskDialog = ({ isOpen, handleDialogClose, onSubmitSuccess }) => {
       status: 'not_started',
     };
 
-    // Chamar a API para adicionar essa tarefa
-    const response = await fetch('http://localhost:3000/tasks', {
-      method: 'POST',
-      body: JSON.stringify(dados),
+    mutate(dados, {
+      onSuccess: () => {
+        // setQueryData adiciona o dado sem fazer uma nova requisição à API
+        queryClient.setQueryData(['tasks'], (currentTasks) => {
+          return [...currentTasks, dados];
+        });
+
+        // refetchQueries('tasks'); -> Faz uma nova requisição à API e pega os dados atualizados
+        // queryClient.refetchQueries('tasks');
+
+        reset({
+          title: '',
+          time: 'morning',
+          description: '',
+        });
+        toast.success('Tarefa adicionada com sucesso!');
+
+        handleDialogClose();
+      },
+      onError: () =>
+        toast.error('Erro ao adicionar a tarefa. Por favor, tente novamente.'),
     });
-
-    if (!response.ok) {
-      return toast.error(
-        'Erro ao adicionar a tarefa. Por favor, tente novamente.'
-      );
-    }
-
-    onSubmitSuccess(dados);
-
-    reset({
-      title: '',
-      time: 'morning',
-      description: '',
-    });
-
-    handleDialogClose();
   };
   return (
     <CSSTransition
@@ -173,7 +192,6 @@ const AddTaskDialog = ({ isOpen, handleDialogClose, onSubmitSuccess }) => {
 AddTaskDialog.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   handleDialogClose: PropTypes.func.isRequired,
-  onSubmitSuccess: PropTypes.func.isRequired,
 };
 
 export default AddTaskDialog;

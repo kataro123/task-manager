@@ -1,5 +1,5 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -11,28 +11,31 @@ import {
 } from './../assets/icons';
 import Button from './Button';
 
-const TaskItem = ({ task, handleCheckboxClick, onDeleteSuccess }) => {
-  const [deleteIsLoading, setDeleteIsLoading] = useState(false);
+const TaskItem = ({ task, handleCheckboxClick }) => {
+  const queryClient = useQueryClient();
+  const { mutate, isPending } = useMutation({
+    mutationKey: ['deleteTask', task.id],
+    mutationFn: async () => {
+      const response = await fetch(`http://localhost:3000/tasks/${task.id}`, {
+        method: 'DELETE',
+      });
+
+      return await response.json();
+    },
+  });
 
   const onDeleteClick = async () => {
-    setDeleteIsLoading(true);
-    // chamar a API para deletar a tarefa
-
-    const response = await fetch(`http://localhost:3000/tasks/${task.id}`, {
-      method: 'DELETE',
+    mutate(undefined, {
+      onSuccess: () => {
+        queryClient.setQueryData(['tasks'], (oldTasks) => {
+          return oldTasks.filter((oldTask) => oldTask.id !== task.id);
+        });
+        toast.success('Tarefa deletada com sucesso!');
+      },
+      onError: () => {
+        toast.error('Erro ao deletar tarefa!');
+      },
     });
-
-    if (!response.ok) {
-      setDeleteIsLoading(false);
-      return toast.error(
-        'Erro ao deletar a tarefa. Por favor, tente novamente'
-      );
-    }
-
-    // Após chamar a api, vou atualizar o state!
-
-    onDeleteSuccess(task.id);
-    setDeleteIsLoading(false);
   };
 
   const getStatusClasses = () => {
@@ -74,9 +77,9 @@ const TaskItem = ({ task, handleCheckboxClick, onDeleteSuccess }) => {
         <Button
           color="ghost"
           onClick={() => onDeleteClick(task.id)}
-          disabled={deleteIsLoading}
+          disabled={isPending}
         >
-          {deleteIsLoading ? (
+          {isPending ? (
             <LoaderIcon className="animate-spin text-brand-text-gray" />
           ) : (
             <TrashIcon className="text-brand-text-gray text-opacity-40 transition hover:text-opacity-60" />
