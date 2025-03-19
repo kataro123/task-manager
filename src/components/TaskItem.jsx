@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { useDeleteTask } from '../hooks/data/use-mutate-task';
+import { useDeleteTask, useUpdateTask } from '../hooks/data/use-mutate-task';
 import {
   CheckIcon,
   DetailsIcon,
@@ -11,8 +11,9 @@ import {
 } from './../assets/icons';
 import Button from './Button';
 
-const TaskItem = ({ task, handleCheckboxClick }) => {
+const TaskItem = ({ task }) => {
   const { mutate, isPending } = useDeleteTask(task.id);
+  const { mutate: updateTaskMutate } = useUpdateTask(task.id);
 
   const onDeleteClick = async () => {
     mutate(undefined, {
@@ -23,6 +24,33 @@ const TaskItem = ({ task, handleCheckboxClick }) => {
         toast.error('Erro ao deletar tarefa!');
       },
     });
+  };
+
+  const handleTaskCheckboxClick = async (uTask) => {
+    const stats = {
+      not_started: 'in_progress',
+      in_progress: 'done',
+      done: 'not_started',
+    };
+
+    updateTaskMutate(
+      { status: stats[uTask.status] },
+      {
+        onSuccess: () => {
+          const statsToast = {
+            not_started: 'Tarefa iniciada com sucesso!',
+            in_progress: 'Tarefa finalizada com sucesso!',
+            done: 'Tarefa resetada com sucesso!',
+          };
+
+          toast.success(statsToast[task.status]);
+          return { ...task, status: stats[task.status] };
+        },
+        onError: (err) => {
+          throw new Error(err);
+        },
+      }
+    );
   };
 
   const getStatusClasses = () => {
@@ -50,7 +78,7 @@ const TaskItem = ({ task, handleCheckboxClick }) => {
             type="checkbox"
             checked={task.status === 'done'}
             className="absolute h-full w-full cursor-pointer opacity-0"
-            onChange={() => handleCheckboxClick(task)}
+            onChange={() => handleTaskCheckboxClick(task)}
           />
           {task.status === 'done' && <CheckIcon className="text-white" />}
           {task.status === 'in_progress' && (
@@ -89,7 +117,6 @@ TaskItem.propTypes = {
     time: PropTypes.oneOf(['morning', 'afternoon', 'evening']).isRequired,
     status: PropTypes.oneOf(['not_started', 'in_progress', 'done']).isRequired,
   }).isRequired,
-  handleCheckboxClick: PropTypes.func.isRequired,
 };
 
 export default TaskItem;

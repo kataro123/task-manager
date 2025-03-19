@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -13,84 +13,39 @@ import Button from '../components/Button';
 import Input from '../components/Input';
 import Sidebar from '../components/Sidebar';
 import TimeSelect from '../components/TimeSelect';
+import {
+  useDeleteTask,
+  useGetTask,
+  useUpdateTask,
+} from '../hooks/data/use-mutate-task';
 
 const TaskDetailsPage = () => {
   const { taskId } = useParams();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
   } = useForm();
+  const queryClient = useQueryClient();
 
   const handleBackClick = () => {
     navigate(-1);
   };
 
-  const { data: task } = useQuery({
-    queryKey: ['task', taskId],
-    queryFn: async () => {
-      const response = await fetch(`http://localhost:3000/tasks/${taskId}`, {
-        method: 'GET',
-      });
+  const { data: task } = useGetTask(taskId, reset);
 
-      const data = await response.json();
-      reset({
-        title: data?.title,
-        time: data?.time,
-        description: data?.description,
-      });
-      return data;
-    },
-  });
+  const { mutate, isPending: updateTaskIsLoading } = useUpdateTask(taskId);
 
-  const { mutate, isPending: updateTaskIsLoading } = useMutation({
-    mutationKey: ['updateTask', task?.id],
-    mutationFn: async (newTask) => {
-      const response = await fetch(`http://localhost:3000/tasks/${taskId}`, {
-        method: 'PATCH',
-        body: JSON.stringify(newTask),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data?.message);
-      }
-
-      return data;
-    },
-  });
-
-  const { mutate: deleteMutate, isPending: deleteTaskIsLoading } = useMutation({
-    mutationKey: ['deleteTask', task?.id],
-    mutationFn: async () => {
-      const taskTitle = task.title;
-      const response = await fetch(`http://localhost:3000/tasks/${taskId}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error();
-      }
-
-      const deletedTask = await response.json();
-
-      queryClient.setQueryData(['tasks'], (oldTasks) => {
-        return oldTasks.filter((oldTask) => oldTask.id !== deletedTask.id);
-      });
-
-      return taskTitle;
-    },
-  });
+  const { mutate: deleteMutate, isPending: deleteTaskIsLoading } =
+    useDeleteTask(taskId);
 
   const handleTaskDelete = async () => {
     deleteMutate(undefined, {
-      onSuccess: (taskTitle) => {
+      onSuccess: (task) => {
         navigate('/');
-        toast.success(`A tarefa '${taskTitle}' foi deletada com sucesso!`);
+        toast.success(`A tarefa '${task.title}' foi deletada com sucesso!`);
       },
       onError: () => {
         toast.error('Houve um erro ao tentar deletar essa tarefa');
@@ -106,25 +61,13 @@ const TaskDetailsPage = () => {
     };
 
     mutate(dados, {
-      onSuccess: (datas) => {
+      onSuccess: (task) => {
         queryClient.setQueryData(['task', taskId], () => {
-          return dados;
+          return task;
         });
+        reset(dados);
 
-        queryClient.setQueryData(['tasks'], (oldTasks) => {
-          return oldTasks?.map((oldTask) => {
-            if (oldTask.id === taskId) {
-              console.log(datas);
-              return datas;
-            }
-            console.log(oldTask);
-            return oldTask;
-          });
-        });
-
-        // reset(dados);
-
-        return toast.success('Tarefa atualizada com sucesso!');
+        return toast.success(`Tarefa ${task.title} atualizada com sucesso!`);
       },
       onError: (err) => {
         console.log(err);

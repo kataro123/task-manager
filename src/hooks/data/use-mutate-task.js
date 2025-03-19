@@ -1,20 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { api } from '../../lib/axios';
+
 export const useAddTask = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: 'addTask',
     mutationFn: async (task) => {
-      const response = await fetch('http://localhost:3000/tasks', {
-        method: 'POST',
-        body: JSON.stringify(task),
-      });
-
-      if (!response.ok) {
-        throw new Error();
-      }
-
-      const createdTask = await response.json();
+      const { data: createdTask } = await api.post('/tasks', task);
 
       return createdTask;
     },
@@ -26,34 +19,67 @@ export const useAddTask = () => {
   });
 };
 
-export const useGetTasks = () => {
-  return useQuery({
-    queryKey: ['tasks'],
-    queryFn: async () => {
-      const response = await fetch('http://localhost:3000/tasks', {
-        method: 'GET',
-      });
-
-      const tasks = await response.json();
-      return tasks;
-    },
-  });
-};
-
 export const useDeleteTask = (taskId) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ['deleteTask', taskId],
     mutationFn: async () => {
-      const response = await fetch(`http://localhost:3000/tasks/${taskId}`, {
-        method: 'DELETE',
-      });
+      const { data } = await api.delete(`/tasks/${taskId}`);
 
-      return await response.json();
+      return data;
     },
     onSuccess: (task) => {
       queryClient.setQueryData(['tasks'], (oldTasks) => {
         return oldTasks.filter((oldTask) => oldTask.id !== task.id);
+      });
+    },
+  });
+};
+
+export const useGetTask = (taskId, reset) => {
+  return useQuery({
+    queryKey: ['task', taskId],
+    queryFn: async () => {
+      const { data } = await api.get(`/tasks/${taskId}`);
+
+      reset({
+        title: data?.title,
+        time: data?.time,
+        description: data?.description,
+      });
+      return data;
+    },
+  });
+};
+
+export const useGetTasks = () => {
+  return useQuery({
+    queryKey: ['tasks'],
+    queryFn: async () => {
+      const { data: tasks } = await api.get('/tasks');
+
+      return tasks;
+    },
+  });
+};
+
+export const useUpdateTask = (taskId) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ['updateTask', taskId],
+    mutationFn: async (newTask) => {
+      const { data } = await api.patch(`/tasks/${taskId}`, newTask);
+
+      return data;
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(['tasks'], (oldTasks) => {
+        return oldTasks?.map((oldTask) => {
+          if (oldTask.id === taskId) {
+            return data;
+          }
+          return oldTask;
+        });
       });
     },
   });

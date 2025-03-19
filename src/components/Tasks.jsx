@@ -1,6 +1,4 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { toast } from 'sonner';
 
 import { useGetTasks } from '../hooks/data/use-mutate-task';
 import {
@@ -16,7 +14,6 @@ import TaskItem from './TaskItem';
 import TasksSeparator from './TasksSeparator';
 
 function Tasks() {
-  const queryClient = useQueryClient();
   const { data: tasks } = useGetTasks();
 
   const [addTaskDialogIsOpen, setAddTaskDialogIsOpen] = useState(false);
@@ -24,40 +21,6 @@ function Tasks() {
   const morningTasks = tasks?.filter((task) => task.time === 'morning');
   const afternoonTasks = tasks?.filter((task) => task.time === 'afternoon');
   const eveningTasks = tasks?.filter((task) => task.time === 'evening');
-
-  const handleTaskCheckboxClick = async (uTask) => {
-    const stats = {
-      not_started: 'in_progress',
-      in_progress: 'done',
-      done: 'not_started',
-    };
-
-    const response = await fetch(`http://localhost:3000/tasks/${uTask.id}`, {
-      method: 'PATCH',
-      body: JSON.stringify({ status: stats[uTask.status] }),
-    });
-
-    if (!response.ok) {
-      return;
-    }
-
-    const newTasks = tasks?.map((task) => {
-      if (task.id !== uTask.id) {
-        return task;
-      }
-
-      const statsToast = {
-        not_started: 'Tarefa iniciada com sucesso!',
-        in_progress: 'Tarefa finalizada com sucesso!',
-        done: 'Tarefa resetada com sucesso!',
-      };
-
-      toast.success(statsToast[task.status]);
-      return { ...task, status: stats[task.status] };
-    });
-
-    queryClient.setQueryData(['tasks'], newTasks);
-  };
 
   const handleDialogClose = () => {
     setAddTaskDialogIsOpen(!addTaskDialogIsOpen);
@@ -97,11 +60,7 @@ function Tasks() {
 
           {/* TAREFA DE MANHA */}
           {morningTasks?.map((task) => (
-            <TaskItem
-              key={task.id}
-              task={task}
-              handleCheckboxClick={handleTaskCheckboxClick}
-            />
+            <TaskItem key={task.id} task={task} />
           ))}
         </div>
 
@@ -116,11 +75,7 @@ function Tasks() {
 
           {/* TAREFA DE TARDE */}
           {afternoonTasks?.map((task) => (
-            <TaskItem
-              key={task.id}
-              task={task}
-              handleCheckboxClick={handleTaskCheckboxClick}
-            />
+            <TaskItem key={task.id} task={task} />
           ))}
         </div>
 
@@ -135,11 +90,7 @@ function Tasks() {
 
           {/* TAREFA DE NOITE */}
           {eveningTasks?.map((task) => (
-            <TaskItem
-              key={task.id}
-              task={task}
-              handleCheckboxClick={handleTaskCheckboxClick}
-            />
+            <TaskItem key={task.id} task={task} />
           ))}
         </div>
       </div>
