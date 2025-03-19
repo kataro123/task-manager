@@ -1,7 +1,8 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
+import { useGetTasks } from '../hooks/data/use-mutate-task';
 import {
   AddIcon,
   CloudSunIcon,
@@ -16,17 +17,7 @@ import TasksSeparator from './TasksSeparator';
 
 function Tasks() {
   const queryClient = useQueryClient();
-  const { data: tasks } = useQuery({
-    queryKey: ['tasks'],
-    queryFn: async () => {
-      const response = await fetch('http://localhost:3000/tasks', {
-        method: 'GET',
-      });
-
-      const tasks = await response.json();
-      return tasks;
-    },
-  });
+  const { data: tasks } = useGetTasks();
 
   const [addTaskDialogIsOpen, setAddTaskDialogIsOpen] = useState(false);
 
