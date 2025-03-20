@@ -45,7 +45,7 @@ const TaskDetailsPage = () => {
   const handleTaskDelete = async () => {
     deleteMutate(undefined, {
       onSuccess: (task) => {
-        navigate('/');
+        navigate('/tasks');
         toast.success(`A tarefa '${task.title}' foi deletada com sucesso!`);
       },
       onError: () => {
