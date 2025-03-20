@@ -43,8 +43,7 @@ const TaskItem = ({ task }) => {
             done: 'Tarefa resetada com sucesso!',
           };
 
-          toast.success(statsToast[task.status]);
-          return { ...task, status: stats[task.status] };
+          return toast.success(statsToast[task.status]);
         },
         onError: (err) => {
           throw new Error(err);
