@@ -1,53 +1,19 @@
-import { useState } from 'react';
-
 import { useGetTasks } from '../hooks/data/use-mutate-task';
-import {
-  AddIcon,
-  CloudSunIcon,
-  MoonIcon,
-  SunIcon,
-  TrashIcon,
-} from './../assets/icons';
-import AddTaskDialog from './AddTaskDialog';
-import Button from './Button';
+import { CloudSunIcon, MoonIcon, SunIcon } from './../assets/icons';
+import Header from './Header';
 import TaskItem from './TaskItem';
 import TasksSeparator from './TasksSeparator';
 
 function Tasks() {
   const { data: tasks } = useGetTasks();
 
-  const [addTaskDialogIsOpen, setAddTaskDialogIsOpen] = useState(false);
-
   const morningTasks = tasks?.filter((task) => task.time === 'morning');
   const afternoonTasks = tasks?.filter((task) => task.time === 'afternoon');
   const eveningTasks = tasks?.filter((task) => task.time === 'evening');
 
-  const handleDialogClose = () => {
-    setAddTaskDialogIsOpen(!addTaskDialogIsOpen);
-  };
-
   return (
     <div className="w-full space-y-16 px-8 py-16">
-      <div className="flex w-full justify-between">
-        <div>
-          <span className="text-xs font-semibold text-brand-primary">
-            Minhas Tarefas
-          </span>
-          <h2 className="text-xl font-semibold">Minhas Tarefas</h2>
-        </div>
-        <div className="flex items-center gap-3">
-          <Button color="ghost">
-            Limpar tarefas
-            <TrashIcon />
-          </Button>
-
-          <Button onClick={() => setAddTaskDialogIsOpen(!addTaskDialogIsOpen)}>
-            Nova Tarefa
-            <AddIcon />
-          </Button>
-        </div>
-      </div>
-
+      <Header title="Minhas Tarefas" subtitle="Minhas Tarefas" />
       <div className="rounded-xl bg-white p-6">
         <div className="space-y-3">
           <TasksSeparator title="Manhã" icon={<SunIcon />} />
@@ -94,10 +60,6 @@ function Tasks() {
           ))}
         </div>
       </div>
-      <AddTaskDialog
-        handleDialogClose={handleDialogClose}
-        isOpen={addTaskDialogIsOpen}
-      />
     </div>
   );
 }
