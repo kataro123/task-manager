@@ -18,6 +18,7 @@ import {
   useGetTask,
   useUpdateTask,
 } from '../hooks/data/use-mutate-task';
+import { taskQueryKeys } from '../keys/queries';
 
 const TaskDetailsPage = () => {
   const { taskId } = useParams();
@@ -62,7 +63,7 @@ const TaskDetailsPage = () => {
 
     mutate(dados, {
       onSuccess: (task) => {
-        queryClient.setQueryData(['task', taskId], () => {
+        queryClient.setQueryData(taskQueryKeys.getOne(task.id), () => {
           return task;
         });
         reset(dados);

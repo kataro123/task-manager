@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { taskQueryKeys } from '../../keys/queries';
 import { api } from '../../lib/axios';
 
 export const useAddTask = () => {
@@ -12,7 +13,7 @@ export const useAddTask = () => {
       return createdTask;
     },
     onSuccess: (createdTask) => {
-      queryClient.setQueryData(['tasks'], (currentTasks) => {
+      queryClient.setQueryData(taskQueryKeys.getAll(), (currentTasks) => {
         return [...currentTasks, createdTask];
       });
     },
@@ -29,7 +30,7 @@ export const useDeleteTask = (taskId) => {
       return data;
     },
     onSuccess: (task) => {
-      queryClient.setQueryData(['tasks'], (oldTasks) => {
+      queryClient.setQueryData(taskQueryKeys.getAll(), (oldTasks) => {
         return oldTasks.filter((oldTask) => oldTask.id !== task.id);
       });
     },
@@ -38,7 +39,7 @@ export const useDeleteTask = (taskId) => {
 
 export const useGetTask = (taskId, reset) => {
   return useQuery({
-    queryKey: ['task', taskId],
+    queryKey: taskQueryKeys.getOne(taskId),
     queryFn: async () => {
       const { data } = await api.get(`/tasks/${taskId}`);
 
@@ -54,7 +55,7 @@ export const useGetTask = (taskId, reset) => {
 
 export const useGetTasks = () => {
   return useQuery({
-    queryKey: ['tasks'],
+    queryKey: taskQueryKeys.getAll(),
     queryFn: async () => {
       const { data: tasks } = await api.get('/tasks');
 
@@ -73,7 +74,7 @@ export const useUpdateTask = (taskId) => {
       return data;
     },
     onSuccess: (data) => {
-      queryClient.setQueryData(['tasks'], (oldTasks) => {
+      queryClient.setQueryData(taskQueryKeys.getAll(), (oldTasks) => {
         return oldTasks?.map((oldTask) => {
           if (oldTask.id === taskId) {
             return data;
