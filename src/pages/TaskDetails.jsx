@@ -78,7 +78,7 @@ const TaskDetailsPage = () => {
   };
 
   return (
-    <div className="flex">
+    <div className="flex bg-black bg-opacity-5">
       <Sidebar />
 
       <div className="w-full space-y-6 px-8 py-16">

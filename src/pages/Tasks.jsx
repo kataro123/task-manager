@@ -5,7 +5,7 @@ import Tasks from '../components/Tasks';
 
 const TasksPage = () => {
   return (
-    <div className="flex">
+    <div className="flex bg-black bg-opacity-5">
       {/* <Toaster
         toastOptions={{
           style: {
